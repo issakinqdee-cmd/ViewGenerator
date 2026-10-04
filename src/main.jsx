@@ -31,7 +31,7 @@ function App(){
  function stop(){if(!running)return;log('Worker stopped by operator');finish(false)}
  function togglePause(){if(!running)return;if(paused){video.current?.play().catch(()=>{});started.current=Date.now()-(duration-remaining)*1000;setPaused(false)}else{video.current?.pause();clearInterval(timer.current);setPaused(true)}}
  function reset(){clearInterval(timer.current);setLogs([]);video.current?.pause();setRunning(false);setPaused(false);setData(initial);setSession(null);setRemaining(duration)}
- function exportData(){download('viewgenerator-experiment.json',JSON.stringify({mediaSource:mediaUrl||normalizeDropboxUrl(dropboxUrl),exportedAt:new Date().toISOString(),data},null,2))}
+ function exportData(){download('viewgenerator-experiment.json',JSON.stringify({mediaSource:mediaUrl||dropboxUrl.trim(),exportedAt:new Date().toISOString(),data},null,2))}
  function exportCsv(){const rows=[['run','timestamp','duration','status','scenario','mode','session'],...history.map((r,i)=>[history.length-i,r.at,r.seconds,r.status,r.scenario,r.mode,r.session])];download('viewgenerator-history.csv',rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n'),'text/csv')}
  const nav=[['dashboard','Dashboard'],['simulator','Simulator'],['analytics','Analytics'],['history','History'],['research','Research']];
  return <div className="shell"><aside><div className="brand"><span>VG</span><div>ViewGenerator<small>LAB</small></div></div><nav>{nav.map(([id,label])=><button className={activeTab===id?'active':''} onClick={()=>setActiveTab(id)} key={id}>{label}</button>)}</nav><div className="sideNote"><b>LOCAL EXPERIMENT</b><span>Playback runs against the lecturer-provided test media link.</span></div></aside>
